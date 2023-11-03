@@ -23,23 +23,6 @@ This project is not an official Google project. It is not supported by
 Google and Google specifically disclaims all warranties as to its quality,
 merchantability, or fitness for a particular purpose.
 
-**AFTER CLONING DELETE THE SECTION BELOW AND ADD YOUR OWN CONTENT**.
-
-## Making a new device driver
-
-To make your own libhal library:
-
-1. press the green "Use this Template" button then
-2. press the "Create a new repository".
-3. Name it `libhal-<insert_device_name>` and replace `<insert_device_name>` with
-  the name of the device's family. For exmaple, if you want to make a library
-  for the MPU series of IMUs then call it `libhal-mpu`.
-4. Choose where to put the repo under,
-5. Go to `settings` > `Pages` > `Build and deployment` > `Source` and set the
-  source to `Github Actions`.
-6. Go to `Pull Requests` and merge the library rename pull request.
-7. Done!
-
 ## About the libhal-device template
 
 The libhal-xbee repository is a template for creating device libraries in
