@@ -28,29 +28,24 @@ namespace hal::xbee {
 class xbee_radio
 {
 public:
-  [[nodiscard]] static result<xbee_radio> create(hal::serial& p_serial,
-                                                 hal::steady_clock& p_clock);
 
-  hal::result<std::span<hal::byte>> read();
+  explicit xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock);
 
-  hal::status write(std::span<const hal::byte> p_data);
+  std::span<hal::byte> read();
 
-  hal::status configure_xbee(const char* p_channel, const char* p_panid);
+  void write(std::span<const hal::byte> p_data);
+
+  void configure_xbee(const char* p_channel, const char* p_panid);
 
 private:
-  xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock)
-    : m_serial(&p_serial)
-    , m_clock(&p_clock)
-  {
-  }
 
   hal::serial* m_serial;
   hal::steady_clock* m_clock;
 
   std::array<hal::byte, 256> m_xbee_buffer;
 
-  hal::status write(const char* str);
-  hal::status write_command(const char* command, const char* value);
+  void write(const char* str);
+  void write_command(const char* command, const char* value);
 };
 
 }  // namespace hal::xbee

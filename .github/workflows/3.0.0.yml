@@ -1,0 +1,11 @@
+name: 🚀 Deploy 3.0.0 # Replace with the next major version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: libhal/ci/.github/workflows/deploy_all.yml@5.x.y
+    with:
+      version: 3.0.0 # Replace with the next major version must match the title
+    secrets: inherit

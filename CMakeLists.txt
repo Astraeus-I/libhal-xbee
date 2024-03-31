@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Khalil Estell
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,26 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 cmake_minimum_required(VERSION 3.15)
 
-project(libhal-xbee VERSION 0.0.1 LANGUAGES CXX)
+project(libhal-xbee LANGUAGES CXX)
 
-find_package(libhal REQUIRED CONFIG)
-find_package(libhal-util REQUIRED CONFIG)
+libhal_test_and_make_library(
+  LIBRARY_NAME libhal-xbee
 
-add_library(libhal-xbee src/xbee.cpp)
+  SOURCES
+  src/xbee.cpp
 
-target_include_directories(libhal-xbee PUBLIC include)
-target_compile_features(libhal-xbee PRIVATE cxx_std_20)
-target_compile_options(libhal-xbee PRIVATE -Wall -Wextra)
-target_link_libraries(libhal-xbee PRIVATE
-  libhal::libhal
-  libhal::util
+  TEST_SOURCES
+  tests/xbee.test.cpp
+  tests/main.test.cpp
 )
-
-if(NOT BUILD_TESTING STREQUAL OFF)
-  add_subdirectory(tests)
-endif()
-
-install(TARGETS libhal-xbee)

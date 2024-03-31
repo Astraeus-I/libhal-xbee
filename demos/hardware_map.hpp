@@ -1,4 +1,4 @@
-// Copyright 2023 Google LLC
+// Copyright 2024 Khalil Estell
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,19 +15,22 @@
 #pragma once
 
 #include <libhal/functional.hpp>
+#include <libhal/i2c.hpp>
 #include <libhal/serial.hpp>
 #include <libhal/steady_clock.hpp>
 
-struct hardware_map
+namespace hal::xbee {
+struct hardware_map_t
 {
   hal::serial* console;
   hal::serial* xbee;
   hal::steady_clock* clock;
   hal::callback<void()> reset;
 };
+}  // namespace hal::xbee
 
 // Application function must be implemented by one of the compilation units
 // (.cpp) files.
-hal::status application(hardware_map& p_map);
-hal::status initialize_processor();
-hal::result<hardware_map> initialize_platform();
+void application(hal::xbee::hardware_map_t& p_map);
+void initialize_processor();
+hal::xbee::hardware_map_t initialize_platform();

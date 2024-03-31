@@ -19,7 +19,7 @@
 
 #include "../hardware_map.hpp"
 
-hal::status application(hardware_map& p_map)
+void application(hal::xbee::hardware_map_t& p_map)
 {
   using namespace std::chrono_literals;
   using namespace hal::literals;
@@ -29,10 +29,10 @@ hal::status application(hardware_map& p_map)
   auto& xbee = *p_map.xbee;
 
   hal::print(console, "Initializing XBEE Radio...\n");
-  auto xbee_module = HAL_CHECK(hal::xbee::xbee_radio::create(xbee, clock));
+  hal::xbee::xbee_radio xbee_module(xbee, clock);
   hal::print(console, "XBEE Radio created! \n");
 
-  HAL_CHECK(xbee_module.configure_xbee("C", "2015"));  // Channel C, PANID 2015
+  xbee_module.configure_xbee("C", "2015");  // Channel C, PANID 2015
   hal::print(console, "Configured XBEE Radio \n");
   hal::delay(clock, 500ms);
 
@@ -40,7 +40,7 @@ hal::status application(hardware_map& p_map)
 
   while (true) {
     hal::delay(clock, 1000ms);
-    auto recieved_data = HAL_CHECK(xbee_module.read());
+    auto recieved_data = xbee_module.read();
     hal::print(console,
                "\n=================== RECIEVED DATA ===================\n");
     hal::print(console, recieved_data);
@@ -52,5 +52,4 @@ hal::status application(hardware_map& p_map)
     hal::print(console, message);
   }
 
-  return hal::success();
 }

@@ -1,4 +1,4 @@
-// Copyright 2023 Google LLC
+// Copyright 2024 Khalil Estell
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,49 +15,42 @@
 #include <libhal-armcortex/dwt_counter.hpp>
 #include <libhal-armcortex/startup.hpp>
 #include <libhal-armcortex/system_control.hpp>
+
 #include <libhal-lpc40/clock.hpp>
 #include <libhal-lpc40/constants.hpp>
+#include <libhal-lpc40/i2c.hpp>
 #include <libhal-lpc40/uart.hpp>
-#include <libhal-util/as_bytes.hpp>
 
 #include "../hardware_map.hpp"
 
-hal::status initialize_processor()
-{
-  hal::cortex_m::initialize_data_section();
-  hal::cortex_m::initialize_floating_point_unit();
-
-  return hal::success();
-}
-
-hal::result<hardware_map> initialize_platform()
+hal::xbee::hardware_map_t initialize_platform()
 {
   using namespace hal::literals;
 
   // Set the MCU to the maximum clock speed
-  HAL_CHECK(hal::lpc40::clock::maximum(12.0_MHz));
+  hal::lpc40::maximum(12.0_MHz);
 
   // Create a hardware counter
-  auto& clock = hal::lpc40::clock::get();
-  auto cpu_frequency = clock.get_frequency(hal::lpc40::peripheral::cpu);
-  static hal::cortex_m::dwt_counter counter(cpu_frequency);
+  static hal::cortex_m::dwt_counter counter(
+    hal::lpc40::get_frequency(hal::lpc40::peripheral::cpu));
 
-  static std::array<hal::byte, 64> uart0_buffer{};
+  static std::array<hal::byte, 512> receive_buffer;
   static std::array<hal::byte, 812> uart1_buffer{};
 
-  static auto uart0 = HAL_CHECK(hal::lpc40::uart::get(0,
-                                                      uart0_buffer,
-                                                      hal::serial::settings{
-                                                        .baud_rate = 115200,
-                                                      }));
+  // Get and initialize UART0 for UART based logging
+  static hal::lpc40::uart uart0(0,
+                                receive_buffer,
+                                hal::serial::settings{
+                                  .baud_rate = 115200,
+                                });
 
-    static auto uart1 = HAL_CHECK(hal::lpc40::uart::get(1,
-                                                      uart1_buffer,
-                                                      hal::serial::settings{
-                                                        .baud_rate = 9600,
-                                                      }));
+  static hal::lpc40::uart uart1(1,
+                                uart1_buffer,
+                                hal::serial::settings{
+                                  .baud_rate = 9600,
+                                });
 
-  return hardware_map{
+  return {
     .console = &uart0,
     .xbee = &uart1,
     .clock = &counter,
