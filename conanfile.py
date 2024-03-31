@@ -17,12 +17,12 @@ from conan import ConanFile
 required_conan_version = ">=2.0.14"
 
 
-class libhal_icm_conan(ConanFile):
+class libhal_xbee_conan(ConanFile):
     name = "libhal-xbee"
     license = "Apache-2.0"
     homepage = "https://github.com/libhal/libhal-xbee"
-    description = ("A collection of drivers for the icm series XBEE devices")
-    topics = ("icm libhal, driver")
+    description = ("A collection of drivers for the xbee series XBEE devices")
+    topics = ("xbee libhal, driver")
     settings = "compiler", "build_type", "os", "arch"
 
     python_requires = "libhal-bootstrap/[^1.0.0]"
